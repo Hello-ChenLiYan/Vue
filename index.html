@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>书籍管理</title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		
+	</head>
+	<body>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<!-- 数组对象中的属性书籍名称必须是最后一个属性 -->
+		<div style="padding:20px;" id="app">
+		    <div class="panel panel-primary">
+				<table class="table table-bordered table-striped text-center">
+					<thead>
+					   <tr>
+						 <th >序号</th>
+						 <th >书籍名称</th>
+						 <th >出版日期</th>
+						 <th >价格</th>
+						 <th >购买数量</th>
+						 <th >操作</th>
+					   </tr>
+					</thead>
+					<tbody>
+						<tr v-for ="book in books">
+						  <td>{{book.id}}</td>
+						  <td>{{book.name}}</td>
+						  <td>{{book.date}}</td>
+						  <td>￥{{book.price}}</td>
+						  <td><button>-</button>{{book.number}}<button>+</button></td>
+						  <td><button v-on:click="remove(id)">移除</button></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<h2>总价格：{{sum}}</h2>
+		    </div>
+		</div>
+		
+		<script>
+		    var app = new Vue({
+		        el: '#app',
+		            data: {
+		                books: [
+							{
+							    id: 1,
+							    date: '2010-10',
+							    price: 60.00,
+							    number:1,
+							    name: '《Java从入门到放弃》'
+							},
+		                    {
+		                        id: 2,
+		                        date: '2012-10',
+		                        price: 90.00,
+		                        number:1,
+		                        name: '《PHP从入门到放弃》'
+		                    },
+		                    {
+		                        id: 3,
+		                        date: '2013-10',
+		                        price: 80.01,
+		                        number:1,
+		                        name: '《Python从入门到放弃》'
+		                    },
+		                    {
+		                        id: 4,
+		                        date: '2011-10',
+		                        price: 70.02,
+		                        number:1,
+		                        name: '《什么都是从入门到放弃》'
+		                    }
+		                ]
+		            }
+		    });
+	
+		</script>
+
+	</body>
+</html>
