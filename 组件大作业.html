@@ -3,17 +3,164 @@
 	<head>
 		<meta charset="utf-8">
 		<title>2020年07月06日组件大作业</title>
+		<style type="text/css">
+			ul{
+				text-decoration: none;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app">
-			{{message}}
+			<my-main></my-main>
 			
 		</div>
+		
 		<script type="text/javascript" src="js/vue.js"></script>
 		<script type="text/javascript">
 			
-			Vue.component('base-layout'){
-				
+			let user = {
+				template: `
+					<h2>用户组件页面</h2>
+				`
+			}
+			
+			let gwc = {
+				data(){
+					return{
+						books: [
+						    // 7月01日，数组对象中的属性书籍名称必须是最后一个属性 
+						    {
+						        isChecked: true,
+						        id: 1,
+						        date: '2010-10',
+						        price: 60.00,
+						        number: 1,
+						        name: '《Java从入门到放弃》'
+						    }, {
+						        isChecked: false,
+						        id: 2,
+						        date: '2012-10',
+						        price: 90.00,
+						        number: 1,
+						        name: '《PHP从入门到放弃》'
+						    }, {
+						        isChecked: false,
+						        id: 3,
+						        date: '2013-10',
+						        price: 80.01,
+						        number: 1,
+						        name: '《Python从入门到放弃》'
+						    }, {
+						        isChecked: false,
+						        id: 4,
+						        date: '2011-10',
+						        price: 70.02,
+						        number: 1,
+						        name: '《什么都是从入门到放弃》'
+						    }
+						]
+					}
+				},
+				template: `
+					<div>
+					    <!-- 购物车列表 -->
+					    <table class="table table-hover table-dark">
+					        <thead>
+					            <tr>
+					                <th>序号</th>
+					                <th>书籍名称</th>
+					                <th>出版日期</th>
+					                <th>价格</th>
+					                <th>购买数量</th>
+					                <th>操作</th>
+					            </tr>
+					        </thead>
+					        <!-- 7月02日，购物车没有物品时，显示没有商品即可 -->
+					        <!-- <tr v-if = "books.length = 0">没有商品信息!</tr> -->
+					        <tbody>
+					            <tr v-for="(book,index) of books">
+					                <td><input type="checkbox" :checked="book.isChecked" />{{book.id}}</td>
+					                <td>{{book.name}}</td>
+					                <td>{{book.date}}</td>
+					                <td>{{book.price | formatPrice}}</td>
+					                <td>
+					                    <button type="button" @click="mouse(book)" :disabled="book.number < 1">-</button> {{book.number}}
+					                    <button type="button" @click="add(book)">+</button>
+					                </td>
+					                <td>
+					                    <button type="button" @click="remove(index)">移除</button>
+					                </td>
+					            </tr>
+					
+					        </tbody>
+					    </table>
+					
+					    <h2>总价格：{{total | formatPrice}}</h2>
+					</div>
+				`,
+				methods:{
+					add: function(book, $event) {
+					    console.log(book);
+					    book.number++;
+					},
+					mouse: (book, $event) => book.number--,
+					remove: function(index) {
+					    console.log(this);
+					    this.books.splice(index, 1)
+					
+					},
+					selected: function(index) {
+					    this.activeName = index
+					}
+				},
+				computed: {
+					total: function() {
+						return this.books.reduce((returnVal, nextItem) => returnVal + nextItem.price * nextItem.number, 0);
+					}
+				},
+				filters: {
+					formatPrice: price => '￥' + price.toFixed(2)
+				}
+			}
+			
+			let main = {
+				template:`
+					<div>
+						<ul>
+							<li v-for = "item of menus" @click="change(item.cmp)" >{{item.name}}</li>
+						</ul>
+						<component v-bind:is="curCmp"></component>
+					</div>
+				`,
+				data(){
+					return{
+						menus:[
+							{
+								id:1,
+								name:'用户管理',
+								href:'/user',
+								cmp:'user'
+							},
+							{
+								id:2,
+								name:'购物车',
+								href:'/cart',
+								cmp:'gwc'
+							}
+						],
+						curCmp:''
+					}
+				},
+				methods:{
+					change(cmp){
+						//1.确保传值成功
+						console.log(cmp);
+						this.curCmp = cmp
+					}
+				},
+				components:{
+					user,gwc
+				}
 			}
 			
 			let vm = new Vue({
@@ -22,7 +169,7 @@
 					message: '我是大组件'
 				},
 				components: {
-					
+					'my-main':main
 				}
 				
 			})
