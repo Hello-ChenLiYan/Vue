@@ -20,7 +20,7 @@
                             icon="el-icon-refresh"
                             size="mini"
                             type="primary"
-                            @click="btnReset">
+                            @click="btnReset" >
                         重置
                     </el-button>
                 </el-button-group>
@@ -181,7 +181,7 @@
                     <template slot-scope="scope">
                         <p>
                             <el-button size="mini">查看</el-button>
-                            <el-button size="mini">编辑</el-button>
+                            <el-button size="mini"  @click="btnEdit(scope.$index, scope.row)">编辑</el-button>
                         </p>
                         <p>
                             <el-button size="mini">日志</el-button>
@@ -209,14 +209,17 @@
         </el-card>
         <el-dialog title="添加商品" :visible.sync="dialogFormVisible">
             <el-form :model="productForm" label-width="80px">
-                <el-form-item label="日期">
-                    <el-input v-model="productForm.date"></el-input>
+                <el-form-item label="图片">
+                    <el-input v-model="productForm.pic"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="productForm.name"> </el-input>
+                <el-form-item label="商品名称">
+                    <el-input v-model="productForm.brandName"> </el-input>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="productForm.address"> </el-input>
+                <el-form-item label="价格">
+                    <el-input v-model="productForm.price"> </el-input>
+                </el-form-item>
+                <el-form-item label="货号">
+                    <el-input v-model="productForm.productSn"> </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -231,6 +234,17 @@
     import { api_productList, api_updateProductStatus } from '@/api/product'
     import { api_listWithChildren } from '@/api/productCate'
     import { api_brandList } from '@/api/brand'
+
+    const defaultListQuery = {
+        keyword: null,
+        pageNum: 1,
+        pageSize: 5,
+        publishStatus: null,
+        verifyStatus: null,
+        productSn: null,
+        productCategoryId: null,
+        brandId: null
+    };
 
     export default {
         name: 'Product',
@@ -286,9 +300,11 @@
                 editRowIndex: -1,
                 dialogFormVisible: false,
                 productForm: {
-                    date: '',
-                    name: '',
-                    address: ''
+                    pic: '',
+                    brandName: '',
+                    price: '',
+                    productSn:'',
+
                 },
                 productCateOptions: []
             }
@@ -337,68 +353,35 @@
             async handleProductCate() {
                 this.productCateOptions = []
                 const { data: res } = await api_listWithChildren()
-                // console.log(res)
                 this.productCateOptions = res.data
-                /*
-                      分析item
-                      要获取结果是啥
-                      [
-                          label: ''
-                          value: ''
-                          children: []
-                      ]
-                  */
-                // let list = res.data
-                // for (let item of list) {
-                //     let node = {
-                //       label: '',
-                //       value: -1,
-                //       children: []
-                //     }
-                //     console.log(item)
-                //   node.label = item.name
-                //   node.value = item.id
-                //   if (item.children != null && item.children.length > 0) {
-                //       //遍历item中的children
-                //     for (let child of item.children) {
-                //         node.children.push({
-                // 	        label: child.name,
-                // 	        value: child.id
-                //         })
-                //     }
-                //   }
-                //   this.productCateOptions.push(node)
-                // }
             },
             btnSave() {
                 this.dialogFormVisible = false
                 /*
-                          unshift()：头部插入
-                          push()：底部插入
-                          splice(从哪里开始, 删除多少个, 添加)中间插入
-                           */
+                  unshift()：头部插入
+                  push()：底部插入
+                  splice(从哪里开始, 删除多少个, 添加)中间插入
+                */
                 if (this.editRowIndex === -1) {
                     //添加
-                    // this.tableData.push(this.productForm)
+                    this.tableData.push(this.productForm)
                 } else {
                     //修改
-                    // this.tableData.splice(this.editRowIndex, 1, this.productForm)
+                    this.tableData.splice(this.editRowIndex, 1, this.productForm)
                 }
 
                 //清空表单内容
                 this.productForm = { brand_right: 0 }
-                // this.productForm.date = ''
-                // this.productForm.name = ''
-                // this.productForm.address = ''
             },
             btnEdit(index, row) {
                 console.log(index, row)
                 this.editRowIndex = index
                 this.dialogFormVisible = true
                 //将内容显示在表单上
-                this.productForm.date = row.date
-                this.productForm.name = row.name
-                this.productForm.address = row.address
+                this.productForm.pic = row.pic
+                this.productForm.brandName = row.brandName
+                this.productForm.price = row.price
+                this.productForm.productSn = row.productSn
             },
             btnDelete(index, row) {
                 console.log(index, row)
@@ -425,7 +408,11 @@
                 this.searchForm.productCategoryId = this.productCateValue[1]
                 this.handleProductList()
             },
-            btnReset() {}
+            btnReset() {
+                this.productCateValue = [];
+                //用一个变量去存储
+                this.searchForm = Object.assign({}, defaultListQuery);
+            }
         }
     }
 </script>
