@@ -11,13 +11,16 @@
                         background-color="#304156"
                         text-color="#9fcbd9"
                         active-text-color="#409eff">
-                    <el-menu-item index="/welcome">首页</el-menu-item>
+                    <el-menu-item index="/welcome" >
+                        <i class="el-icon-s-home"></i>
+                        <span>首页</span>
+                    </el-menu-item>
                     <!--一级子菜单-->
                     <el-submenu :index="formatPath(null, item.name)"
                                 v-for="item in firstMenus" :key="item.id">
                         <!--一级子菜单标题-->
                         <template slot="title">
-                            <i class="el-icon-location"></i>
+                            <i class="el-icon-s-goods"></i>
                             <span>{{item.title}}</span>
                         </template>
                         <!--二级子菜单-->
