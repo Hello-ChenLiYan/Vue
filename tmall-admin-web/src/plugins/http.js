@@ -5,11 +5,6 @@ import axios from 'axios'
 //在vue对象中挂载$http属性
  Vue.use(VueAxios,axios);
 
-// const instance = axios.create({
-//     baseURL:"http://118.89.176.28:8080",
-//     timeout:15000
-// });
-
 axios.defaults.baseURL = 'http://118.89.176.28:8080'
 axios.defaults.timeout = 15000
 
