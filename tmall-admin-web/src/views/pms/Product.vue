@@ -196,23 +196,29 @@
                 </el-table-column>
             </el-table>
             <el-pagination
-                    style="margin-top: 20px"
+                    style="margin-top: 20px;margin-left: 25%"
                     background
                     @size-change="btnSearch"
                     @current-change="handleCurrentChange"
-                    :current-page="page.pageNum"
+                    :current-page.sync="page.pageNum"
                     :page-sizes="[5, 10, 15]"
                     :page-size="page.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="page.total">
             </el-pagination>
         </el-card>
-        <el-dialog title="添加商品" :visible.sync="dialogFormVisible">
+        <el-dialog :title = "editRowIndex !== -1 ? '编辑商品' : '添加商品' "  :visible.sync="dialogFormVisible">
             <el-form :model="productForm" label-width="80px">
+                <el-form-item label="ID">
+                    <el-input v-model="productForm.id" :readonly = "true" ></el-input>
+                </el-form-item>
                 <el-form-item label="图片">
                     <el-input v-model="productForm.pic"></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称">
+                    <el-input v-model="productForm.name"> </el-input>
+                </el-form-item>
+                <el-form-item label="品牌">
                     <el-input v-model="productForm.brandName"> </el-input>
                 </el-form-item>
                 <el-form-item label="价格">
@@ -301,6 +307,7 @@
                 dialogFormVisible: false,
                 productForm: {
                     pic: '',
+                    name:'',
                     brandName: '',
                     price: '',
                     productSn:'',
@@ -333,7 +340,10 @@
                 })
                 console.log(res);
             },
-            handleCurrentChange() {},
+            handleCurrentChange(value) {
+                this.searchForm.pageNum = value;
+                this.handleProductList()
+            },
             handleCateChange(value) {
                 console.log(value)
                 console.log(this.productCateValue)
@@ -364,10 +374,10 @@
                 */
                 if (this.editRowIndex === -1) {
                     //添加
-                    this.tableData.push(this.productForm)
+                    this.productList.push(this.productForm)
                 } else {
                     //修改
-                    this.tableData.splice(this.editRowIndex, 1, this.productForm)
+                    this.productList.splice(this.editRowIndex, 1, this.productForm)
                 }
 
                 //清空表单内容
@@ -378,7 +388,9 @@
                 this.editRowIndex = index
                 this.dialogFormVisible = true
                 //将内容显示在表单上
+                this.productForm.id = row.id
                 this.productForm.pic = row.pic
+                this.productForm.name = row.name
                 this.productForm.brandName = row.brandName
                 this.productForm.price = row.price
                 this.productForm.productSn = row.productSn
@@ -388,7 +400,7 @@
                 this.$confirm(`确认删除姓名为${row.name}的记录？`, '删除', {
                     confirmButtonText: '确定'
                 }).then(() => {
-                    let res = this.tableData.splice(index, 1)
+                    let res = this.productList.splice(index, 1)
                     let msg = `删除成功`
                     if (!res) {
                         msg = `删除失败`
