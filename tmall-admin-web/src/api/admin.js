@@ -1,7 +1,7 @@
 //登录相关请求
 import axios from '../plugins/http.js'
 
-//登录成功
+//登录
 export function api_login(username, password) {
     return axios
         .post('/admin/login',{
@@ -9,7 +9,7 @@ export function api_login(username, password) {
         })
 }
 
-//登出
+//注销，退出
 export function api_logout() {
     return axios
         .post('/admin/logout')
