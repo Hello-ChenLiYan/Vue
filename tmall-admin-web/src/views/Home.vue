@@ -42,7 +42,7 @@
               <el-avatar
                       :src="loginUser.icon"
               ></el-avatar>
-              欢迎：{{loginUser.username}}
+              {{loginUser.username}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
                         <el-dropdown-menu slot="dropdown">
