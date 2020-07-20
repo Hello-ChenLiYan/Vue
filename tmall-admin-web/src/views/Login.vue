@@ -61,7 +61,7 @@
                 this.$refs['loginFormRef'].resetFields();
             },
             btnLogin(){
-                this.isLoading = true;
+
                 //1.验证表单
                 this.$refs['loginFormRef'].validate(async (valid) => {
                     if(!valid) {
@@ -70,9 +70,8 @@
                     }
 
                     if (this.loginForm.captcha !== this.checkCode) {
-                        console.log("验证码错误");
+                        this.$message.error("验证码错误")
                         //验证码错误，则验证码会刷新
-
                         this.createCode();
                         return false;
                     }
@@ -105,11 +104,13 @@
                          this.$cookies.remove('username');
                          this.$cookies.remove('password');
                      }
+                    this.isLoading = true;
 
                     //6.登录页面刷新或加载的时候从cookies获取
 
                     //7.跳转到主页面,编程式路由 异步操作不可控，故操作为同步操作await
                     await this.$router.replace('/home')
+
                 });
             },
 
@@ -132,7 +133,7 @@
                 }
                 //把code值赋给验证码
                 this.checkCode = this.code;
-                console.log(this.checkCode);
+
             }
         },
         created() {
