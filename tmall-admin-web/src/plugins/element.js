@@ -55,7 +55,7 @@ Vue.use(Avatar)
 
 //消息提示框
 import {Message,MessageBox} from "element-ui";
-//挂载到原型
+//挂载到原型，消息提示确认框用$confirm
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
 
