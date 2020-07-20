@@ -10,6 +10,7 @@ import "./plugins/cookies.js"
 //引入登录权限设置
 import "./router/auth.js"
 
+//关闭生产模式下给出的提示
 Vue.config.productionTip = false;
 
 new Vue({
